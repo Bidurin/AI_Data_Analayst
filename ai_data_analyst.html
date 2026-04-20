@@ -1,0 +1,653 @@
+
+<h2 class="sr-only">AI Data Analyst with trend forecasting, auto report, smart suggestions, and natural language filter</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{display:grid;grid-template-columns:210px 1fr;grid-template-rows:52px 1fr 130px;height:740px;border:0.5px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#f8fafc;box-shadow:0 8px 40px rgba(0,0,0,.12);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.topbar{grid-column:1/-1;background:#0a1628;display:flex;align-items:center;padding:0 16px;gap:10px}
+.logo-box{width:30px;height:30px;background:linear-gradient(135deg,#1D9E75,#378ADD);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.logo-name{color:#f1f5f9;font-size:13px;font-weight:600}
+.top-center{flex:1;display:flex;justify-content:center}
+.top-pill{display:flex;align-items:center;gap:5px;background:#132035;border:0.5px solid #1D9E75;border-radius:20px;padding:3px 10px}
+.top-dot{width:5px;height:5px;border-radius:50%;background:#1D9E75;animation:pu 2s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.top-pill-text{font-size:10px;color:#9FE1CB;font-weight:500}
+.top-right{display:flex;align-items:center;gap:6px}
+.icon-btn{width:30px;height:30px;border-radius:7px;background:#132035;border:0.5px solid #1e3050;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#64748b;font-size:13px;transition:all .15s}
+.icon-btn:hover{background:#1e3050;color:#94a3b8}
+
+.sidebar{background:#0d1f35;display:flex;flex-direction:column;border-right:0.5px solid #1a3050}
+.stabs{display:flex;border-bottom:0.5px solid #1a3050;flex-shrink:0}
+.stab{flex:1;text-align:center;padding:9px 4px;font-size:10px;font-weight:500;color:#2a4a6a;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.stab.on{color:#1D9E75;border-bottom-color:#1D9E75}
+.stab:hover:not(.on){color:#5DCAA5}
+.sbody{flex:1;overflow-y:auto;padding:6px 0}
+.slabel{font-size:9px;color:#1e3a5a;padding:8px 12px 3px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.trow{padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:7px;border-left:2px solid transparent;transition:all .12s}
+.trow:hover{background:#132035}
+.trow.on{background:#1a3050;border-left-color:#1D9E75}
+.tico{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0}
+.ti-s{background:#0d2d1f;color:#1D9E75}.ti-c{background:#0d1f3d;color:#378ADD}.ti-p{background:#2d1f0d;color:#BA7517}.ti-r{background:#2d0d1f;color:#D4537E}
+.tinfo{flex:1}.tname{font-size:11px;color:#94a3b8;font-weight:500}.tmeta{font-size:9px;color:#2a4a6a;margin-top:1px}
+.tbadge{font-size:9px;background:#132035;color:#2a4a6a;padding:1px 5px;border-radius:5px;flex-shrink:0;font-weight:500}
+.csec{padding:2px 10px 6px 39px}
+.citem{display:flex;justify-content:space-between;align-items:center;padding:2.5px 0;font-size:10px;color:#2a4a6a;border-bottom:0.5px solid #132035}
+.citem:last-child{border-bottom:none}
+.ctype{font-family:'Courier New',monospace;font-size:9px;background:#132035;color:#1D9E75;padding:1px 4px;border-radius:3px}
+
+.main{display:flex;flex-direction:column;overflow:hidden;background:#f1f5f9}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px 12px 8px;flex-shrink:0}
+.mcard{background:#fff;border:0.5px solid #e2e8f0;border-radius:10px;padding:10px 12px;position:relative;overflow:hidden}
+.macc{position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0}
+.mlabel{font-size:9px;color:#64748b;margin-bottom:3px;font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+.mval{font-size:17px;font-weight:600;color:#0f172a;line-height:1.2;letter-spacing:-.5px}
+.mdelta{font-size:9px;margin-top:3px;font-weight:600}
+.up{color:#1D9E75}.dn{color:#E24B4A}
+
+.ctabs{display:flex;background:#fff;border-bottom:0.5px solid #e2e8f0;padding:0 12px;flex-shrink:0;overflow-x:auto}
+.ctab{font-size:11px;padding:9px 12px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;margin-bottom:-0.5px;transition:all .15s;white-space:nowrap;font-weight:500;flex-shrink:0}
+.ctab.on{color:#1D9E75;border-bottom-color:#1D9E75}
+.ctab:hover:not(.on){color:#0f172a}
+.ctab.new-feat{color:#8E44AD}
+.ctab.new-feat.on{color:#8E44AD;border-bottom-color:#8E44AD}
+
+.cbody{flex:1;overflow:hidden;padding:10px 12px;display:flex;gap:10px}
+
+.chart-box{flex:1;background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ch-toolbar{display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.ch-title{font-size:13px;font-weight:600;color:#0f172a;flex:1;letter-spacing:-.2px}
+.ch-badge{font-size:9px;background:#EBF3FB;color:#185FA5;padding:2px 8px;border-radius:8px;border:0.5px solid #B5D4F4;font-weight:600;white-space:nowrap}
+.forecast-badge{font-size:9px;background:#F3EEF9;color:#5B2C8D;padding:2px 8px;border-radius:8px;border:0.5px solid #AFA9EC;font-weight:600;cursor:pointer;transition:all .15s}
+.forecast-badge:hover{background:#EEEDFE}
+.forecast-badge.on{background:#8E44AD;color:#fff;border-color:#8E44AD}
+.toolbar-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;background:#f8fafc;color:#475569;border:0.5px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:11px;font-weight:500;white-space:nowrap;transition:all .15s}
+.toolbar-btn:hover{background:#EBF3FB;color:#185FA5;border-color:#B5D4F4}
+.color-picker-wrap{position:relative}
+.color-trigger{display:flex;align-items:center;gap:6px;padding:5px 10px;background:#f8fafc;border:0.5px solid #e2e8f0;border-radius:8px;cursor:pointer;font-size:11px;color:#374151;font-weight:500;white-space:nowrap;transition:all .15s}
+.color-trigger:hover{background:#f1f5f9}
+.color-trigger.open{background:#EBF3FB;border-color:#B5D4F4;color:#185FA5}
+.color-preview{width:14px;height:14px;border-radius:3px;border:0.5px solid rgba(0,0,0,.15);flex-shrink:0}
+.color-arrow{font-size:8px;color:#94a3b8;transition:transform .15s}
+.color-trigger.open .color-arrow{transform:rotate(180deg)}
+.color-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:0.5px solid #e2e8f0;border-radius:10px;padding:12px;width:200px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.color-dropdown.show{display:block}
+.cd-label{font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.cd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:10px}
+.cd-swatch{width:28px;height:28px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:700}
+.cd-swatch:hover{transform:scale(1.1)}
+.cd-swatch.sel{border-color:#0f172a}
+.cd-names{display:flex;flex-direction:column;gap:2px;border-top:0.5px solid #f1f5f9;padding-top:8px}
+.cd-name-row{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:6px;cursor:pointer;transition:background .12s}
+.cd-name-row:hover{background:#f8fafc}
+.cd-name-row.sel{background:#EBF3FB}
+.cd-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.cd-name{font-size:11px;color:#374151;font-weight:500;flex:1}
+.cd-name-row.sel .cd-name{color:#185FA5;font-weight:600}
+.cd-check{font-size:10px;color:#185FA5;display:none}
+.cd-name-row.sel .cd-check{display:block}
+.ch-area{flex:1;min-height:0;position:relative}
+
+.ibox{flex:1;display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.icard{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:14px}
+.ilabel{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.il-green{color:#0F6E56}.il-blue{color:#185FA5}.il-amber{color:#854F0B}.il-purple{color:#5B2C8D}
+.itext{font-size:12px;color:#1e293b;line-height:1.7}
+.itext.muted{color:#64748b;font-style:italic}
+
+.sql-wrap{flex:1;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.sql-dark{background:#0a1628;border-radius:12px;padding:14px;flex-shrink:0}
+.sql-hdr{display:flex;align-items:center;margin-bottom:8px}
+.sql-lbl{font-size:9px;color:#1D9E75;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sql-copy{margin-left:auto;font-size:9px;color:#2a4a6a;background:#132035;border:0.5px solid #1e3050;border-radius:4px;padding:2px 8px;cursor:pointer;font-weight:500}
+.sql-copy:hover{color:#9FE1CB}
+.sql-code{font-family:'Courier New',monospace;font-size:11px;color:#5DCAA5;line-height:1.75;white-space:pre-wrap}
+.res-card{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;overflow:hidden;flex:1;display:flex;flex-direction:column}
+.res-hdr{display:flex;align-items:center;padding:8px 12px;background:#f8fafc;border-bottom:0.5px solid #e2e8f0;flex-shrink:0}
+.res-title{font-size:10px;font-weight:700;color:#0f172a}
+.res-badge{margin-left:8px;font-size:9px;background:#e2e8f0;color:#475569;padding:1px 6px;border-radius:8px;font-weight:500}
+.res-body{overflow:auto;flex:1}
+.res-table{width:100%;border-collapse:collapse;font-size:11px}
+.res-table th{text-align:left;padding:7px 12px;background:#f8fafc;color:#374151;font-weight:700;border-bottom:0.5px solid #e2e8f0;position:sticky;top:0;font-size:10px}
+.res-table td{padding:6px 12px;border-bottom:0.5px solid #f1f5f9;color:#1e293b}
+.res-table tr:hover td{background:#f8fafc}
+.res-table td.num{font-family:'Courier New',monospace;color:#185FA5;font-size:10px;font-weight:600}
+
+.dt-wrap{flex:1;overflow:hidden;display:flex;flex-direction:column;background:#fff;border-radius:12px;border:0.5px solid #e2e8f0}
+.dt-hdr{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:0.5px solid #e2e8f0;flex-shrink:0}
+.dt-title{font-size:12px;font-weight:600;color:#0f172a;flex:1}
+.dt-badge{font-size:9px;background:#f1f5f9;color:#475569;padding:1px 7px;border-radius:8px;font-weight:500;border:0.5px solid #e2e8f0}
+.dt-search{font-size:11px;padding:4px 10px;border:0.5px solid #e2e8f0;border-radius:8px;background:#f8fafc;color:#0f172a;outline:none;width:130px}
+.dt-search:focus{border-color:#378ADD}
+.dt-body{overflow:auto;flex:1}
+.dt-table{width:100%;border-collapse:collapse;font-size:11px}
+.dt-table th{text-align:left;padding:6px 10px;background:#f8fafc;color:#374151;font-weight:700;border-bottom:0.5px solid #e2e8f0;position:sticky;top:0;font-size:10px;white-space:nowrap}
+.dt-table td{padding:5px 10px;border-bottom:0.5px solid #f1f5f9;color:#1e293b;white-space:nowrap}
+.dt-table tr:hover td{background:#f8fafc}
+.dt-table td.num{font-family:'Courier New',monospace;font-size:10px;color:#185FA5;font-weight:600}
+
+/* ── Forecast pane ── */
+.forecast-wrap{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.forecast-header{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:14px;flex-shrink:0}
+.fc-title-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.fc-title{font-size:13px;font-weight:600;color:#0f172a;flex:1}
+.fc-badge{font-size:9px;background:#F3EEF9;color:#5B2C8D;padding:2px 8px;border-radius:8px;border:0.5px solid #AFA9EC;font-weight:600}
+.fc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fc-stat{background:#f8fafc;border:0.5px solid #e2e8f0;border-radius:8px;padding:8px 10px}
+.fc-stat-label{font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.fc-stat-val{font-size:15px;font-weight:600;color:#0f172a}
+.fc-stat-sub{font-size:9px;margin-top:2px;font-weight:500}
+.forecast-chart{flex:1;background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:14px;min-height:0;display:flex;flex-direction:column;gap:6px}
+.fc-chart-area{flex:1;min-height:0;position:relative}
+.fc-legend{display:flex;gap:14px;flex-shrink:0}
+.fc-leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#475569;font-weight:500}
+.fc-leg-dot{width:10px;height:3px;border-radius:2px}
+
+/* ── Report pane ── */
+.report-wrap{flex:1;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.report-toolbar{display:flex;align-items:center;gap:8px;background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:12px 14px;flex-shrink:0}
+.report-title{font-size:13px;font-weight:600;color:#0f172a;flex:1}
+.report-btn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;cursor:pointer;font-size:11px;font-weight:600;border:none;transition:all .15s;white-space:nowrap}
+.rb-generate{background:#185FA5;color:#fff}
+.rb-generate:hover{background:#0C447C}
+.rb-pdf{background:#E74C3C;color:#fff}
+.rb-pdf:hover{background:#c0392b}
+.rb-loading{background:#e2e8f0;color:#94a3b8;cursor:not-allowed}
+.report-content{flex:1;overflow-y:auto;background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;padding:20px 24px}
+.report-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px}
+.report-ph-icon{font-size:32px}
+.report-ph-text{font-size:12px;color:#94a3b8;text-align:center}
+.report-body{display:none}
+.report-body.show{display:block}
+.rpt-h1{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:4px;letter-spacing:-.3px}
+.rpt-date{font-size:10px;color:#94a3b8;margin-bottom:16px;font-weight:500}
+.rpt-divider{height:0.5px;background:#e2e8f0;margin:14px 0}
+.rpt-section{margin-bottom:14px}
+.rpt-h2{font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.rpt-p{font-size:12px;color:#1e293b;line-height:1.75;margin-bottom:6px}
+.rpt-bullets{list-style:none;padding:0}
+.rpt-bullets li{font-size:12px;color:#1e293b;line-height:1.7;padding:2px 0 2px 16px;position:relative}
+.rpt-bullets li::before{content:'•';position:absolute;left:4px;color:#185FA5;font-weight:700}
+.rpt-highlight{background:#EBF3FB;border-left:3px solid #185FA5;border-radius:0 6px 6px 0;padding:10px 12px;margin:8px 0;font-size:12px;color:#0f172a;line-height:1.6}
+.rpt-metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:8px 0}
+.rpt-metric{background:#f8fafc;border:0.5px solid #e2e8f0;border-radius:8px;padding:8px 10px}
+.rpt-metric-label{font-size:9px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.rpt-metric-val{font-size:14px;font-weight:600;color:#0f172a;margin-top:2px}
+
+/* ── Smart suggestions ── */
+.suggestions-row{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;padding:0 0 2px}
+.sug-label{font-size:10px;color:#475569;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.sug-chip{font-size:10px;padding:4px 10px;border-radius:10px;border:0.5px solid #AFA9EC;color:#5B2C8D;cursor:pointer;background:#F3EEF9;font-weight:500;transition:all .12s;white-space:nowrap}
+.sug-chip:hover{background:#8E44AD;color:#fff;border-color:#8E44AD}
+
+/* ── NL Filter ── */
+.nl-filter-bar{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#F3EEF9;border:0.5px solid #AFA9EC;border-radius:8px;flex-shrink:0}
+.nl-filter-label{font-size:10px;color:#5B2C8D;font-weight:600;white-space:nowrap}
+.nl-filter-input{flex:1;font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid #AFA9EC;background:#fff;color:#0f172a;outline:none}
+.nl-filter-input:focus{border-color:#8E44AD}
+.nl-filter-btn{padding:4px 10px;background:#8E44AD;color:#fff;border:none;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap}
+.nl-filter-btn:hover{background:#5B2C8D}
+.nl-filter-clear{padding:4px 8px;background:transparent;color:#8E44AD;border:0.5px solid #AFA9EC;border-radius:6px;font-size:10px;cursor:pointer;font-weight:500}
+.nl-filter-clear:hover{background:#EEEDFE}
+.nl-active-filter{font-size:9px;color:#5B2C8D;background:#EEEDFE;padding:2px 8px;border-radius:8px;font-weight:500;display:none}
+.nl-active-filter.show{display:inline-block}
+
+.hist-wrap{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.hcard{background:#fff;border:0.5px solid #e2e8f0;border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.hcard:hover{border-color:#1D9E75;background:#f0fdf8}
+.hprompt{font-size:11px;color:#0f172a;margin-bottom:5px;font-weight:500}
+.hmeta{display:flex;gap:6px;align-items:center}
+.htag{font-size:9px;background:#EBF3FB;color:#185FA5;padding:1px 7px;border-radius:8px;font-weight:600}
+.htime{font-size:9px;color:#94a3b8}
+.hempty{text-align:center;padding:40px 0;font-size:12px;color:#94a3b8}
+
+.chatbar{grid-column:1/-1;border-top:0.5px solid #e2e8f0;background:#fff;padding:8px 14px;display:flex;flex-direction:column;gap:6px}
+.suggestions-row-chat{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{font-size:10px;padding:4px 10px;border-radius:10px;border:0.5px solid #e2e8f0;color:#475569;cursor:pointer;transition:all .12s;font-weight:500;background:#fff}
+.chip:hover,.chip.on{background:#EBF3FB;color:#185FA5;border-color:#B5D4F4}
+.irow{display:flex;gap:8px;align-items:center}
+.cinput{flex:1;font-size:12px;padding:7px 11px;border-radius:8px;border:0.5px solid #e2e8f0;background:#f8fafc;color:#0f172a;outline:none}
+.cinput:focus{border-color:#378ADD;background:#fff}
+.sbtn{padding:7px 16px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+.sbtn:hover{background:#0C447C}
+.sbtn:disabled{opacity:.4;cursor:not-allowed}
+.think{display:none;align-items:center;gap:5px;font-size:10px;color:#64748b}
+.think.on{display:flex}
+.dot{width:4px;height:4px;border-radius:50%;background:#378ADD;animation:bo 1s infinite}
+.dot:nth-child(2){animation-delay:.15s}.dot:nth-child(3){animation-delay:.3s}
+@keyframes bo{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+</style>
+
+<div class="app" style="position:relative">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:9px">
+      <div class="logo-box">&#9783;</div>
+      <span class="logo-name">AI Data Analyst</span>
+    </div>
+    <div class="top-center">
+      <div class="top-pill"><div class="top-dot"></div><span class="top-pill-text">sales.db · 4 tables · 530 rows</span></div>
+    </div>
+    <div class="top-right">
+      <div class="icon-btn" title="Settings">&#9881;</div>
+      <div class="icon-btn" title="Export">&#8681;</div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="stabs">
+      <div class="stab on" onclick="sTab('schema',this)">Schema</div>
+      <div class="stab" onclick="sTab('tables',this)">Tables</div>
+    </div>
+    <div class="sbody" id="ss">
+      <div class="slabel">Tables</div>
+      <div class="trow on" onclick="sClick(this,'sales')"><div class="tico ti-s">S</div><div class="tinfo"><div class="tname">sales</div><div class="tmeta">500 rows</div></div><span class="tbadge">7</span></div>
+      <div class="csec" id="cs-sales">
+        <div class="citem">id<span class="ctype">INT</span></div><div class="citem">sale_date<span class="ctype">TEXT</span></div><div class="citem">customer_id<span class="ctype">INT</span></div><div class="citem">product_id<span class="ctype">INT</span></div><div class="citem">quantity<span class="ctype">INT</span></div><div class="citem">amount<span class="ctype">REAL</span></div><div class="citem">region_id<span class="ctype">INT</span></div>
+      </div>
+      <div class="trow" onclick="sClick(this,'customers')"><div class="tico ti-c">C</div><div class="tinfo"><div class="tname">customers</div><div class="tmeta">15 rows</div></div><span class="tbadge">5</span></div>
+      <div class="csec" id="cs-customers" style="display:none"><div class="citem">id<span class="ctype">INT</span></div><div class="citem">name<span class="ctype">TEXT</span></div><div class="citem">email<span class="ctype">TEXT</span></div><div class="citem">region_id<span class="ctype">INT</span></div><div class="citem">joined_date<span class="ctype">TEXT</span></div></div>
+      <div class="trow" onclick="sClick(this,'products')"><div class="tico ti-p">P</div><div class="tinfo"><div class="tname">products</div><div class="tmeta">10 rows</div></div><span class="tbadge">4</span></div>
+      <div class="csec" id="cs-products" style="display:none"><div class="citem">id<span class="ctype">INT</span></div><div class="citem">name<span class="ctype">TEXT</span></div><div class="citem">category<span class="ctype">TEXT</span></div><div class="citem">price<span class="ctype">REAL</span></div></div>
+      <div class="trow" onclick="sClick(this,'regions')"><div class="tico ti-r">R</div><div class="tinfo"><div class="tname">regions</div><div class="tmeta">5 rows</div></div><span class="tbadge">2</span></div>
+      <div class="csec" id="cs-regions" style="display:none"><div class="citem">id<span class="ctype">INT</span></div><div class="citem">name<span class="ctype">TEXT</span></div></div>
+    </div>
+    <div class="sbody" id="st" style="display:none">
+      <div class="slabel">Browse</div>
+      <div class="trow on" onclick="tClick(this,'sales')"><div class="tico ti-s">S</div><div class="tinfo"><div class="tname">sales</div><div class="tmeta">500 rows</div></div></div>
+      <div class="trow" onclick="tClick(this,'customers')"><div class="tico ti-c">C</div><div class="tinfo"><div class="tname">customers</div><div class="tmeta">15 rows</div></div></div>
+      <div class="trow" onclick="tClick(this,'products')"><div class="tico ti-p">P</div><div class="tinfo"><div class="tname">products</div><div class="tmeta">10 rows</div></div></div>
+      <div class="trow" onclick="tClick(this,'regions')"><div class="tico ti-r">R</div><div class="tinfo"><div class="tname">regions</div><div class="tmeta">5 rows</div></div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="metrics">
+      <div class="mcard"><div class="macc" style="background:#1D9E75"></div><div class="mlabel">Total Revenue</div><div class="mval">&#8377;17.5L</div><div class="mdelta up">&#8679; 12% vs last year</div></div>
+      <div class="mcard"><div class="macc" style="background:#378ADD"></div><div class="mlabel">Total Orders</div><div class="mval">500</div><div class="mdelta up">&#8679; 8% this month</div></div>
+      <div class="mcard"><div class="macc" style="background:#BA7517"></div><div class="mlabel">Avg Order Value</div><div class="mval">&#8377;3,469</div><div class="mdelta dn">&#8681; 2% vs last month</div></div>
+      <div class="mcard"><div class="macc" style="background:#D4537E"></div><div class="mlabel">Active Customers</div><div class="mval">15</div><div class="mdelta up">&#8679; 3 new this quarter</div></div>
+    </div>
+
+    <div class="ctabs">
+      <div class="ctab on" onclick="mTab('chart',this)">Chart</div>
+      <div class="ctab" onclick="mTab('insight',this)">AI Insight</div>
+      <div class="ctab" onclick="mTab('sql',this)">SQL</div>
+      <div class="ctab" onclick="mTab('dtable',this)">Data Table</div>
+      <div class="ctab new-feat" onclick="mTab('forecast',this)">&#9733; Forecast</div>
+      <div class="ctab new-feat" onclick="mTab('report',this)">&#9733; Report</div>
+      <div class="ctab" onclick="mTab('history',this)">History</div>
+    </div>
+
+    <!-- Chart pane -->
+    <div class="cbody" id="pane-chart">
+      <div class="chart-box">
+        <div class="ch-toolbar">
+          <span class="ch-title" id="ch-title">Monthly Sales Revenue — 2023</span>
+          <span class="ch-badge" id="ch-badge">line · 12 pts</span>
+        </div>
+        <div class="ch-toolbar">
+          <div class="color-picker-wrap" id="cpw">
+            <div class="color-trigger" id="color-trigger" onclick="togglePicker()">
+              <div class="color-preview" id="color-preview" style="background:#5B9BD5"></div>
+              <span>Chart Colour</span>
+              <span class="color-arrow">&#9660;</span>
+            </div>
+            <div class="color-dropdown" id="color-dropdown">
+              <div class="cd-label">Preset Colours</div>
+              <div class="cd-grid" id="cd-grid"></div>
+              <div class="cd-label">Named</div>
+              <div class="cd-names" id="cd-names"></div>
+            </div>
+          </div>
+          <button class="toolbar-btn" onclick="exportChart()">&#8595; Export PNG</button>
+        </div>
+        <div class="ch-area"><canvas id="mc" role="img" aria-label="Data chart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Insight pane -->
+    <div class="cbody" id="pane-insight" style="display:none">
+      <div class="ibox">
+        <div class="icard"><div class="ilabel il-green"><span style="width:7px;height:7px;border-radius:50%;background:#1D9E75;display:inline-block"></span>AI Insight</div><div class="itext" id="insight-text">Revenue peaked in October at ₹2.15L. Strong Q3 growth driven by Electronics. December dip is seasonal.</div></div>
+        <div class="icard"><div class="ilabel il-blue"><span style="width:7px;height:7px;border-radius:50%;background:#378ADD;display:inline-block"></span>Prompt Used</div><div class="itext muted" id="prompt-used">Show monthly sales revenue as a line chart</div></div>
+        <div class="icard"><div class="ilabel il-purple"><span style="width:7px;height:7px;border-radius:50%;background:#8E44AD;display:inline-block"></span>Smart Suggestions</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:2px">
+            <div class="sug-chip" onclick="loadSuggestion(this,'Which month had the highest revenue growth rate?')">Which month had the highest revenue growth rate?</div>
+            <div class="sug-chip" onclick="loadSuggestion(this,'How does Q4 revenue compare to Q1?')">How does Q4 revenue compare to Q1?</div>
+            <div class="sug-chip" onclick="loadSuggestion(this,'Show revenue trend as area chart')">Show revenue trend as area chart</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQL pane -->
+    <div class="cbody" id="pane-sql" style="display:none;flex-direction:column">
+      <div class="sql-wrap">
+        <div class="sql-dark">
+          <div class="sql-hdr"><span class="sql-lbl">Generated SQL</span><button class="sql-copy" onclick="copySql()">Copy</button></div>
+          <div class="sql-code" id="sql-text">SELECT strftime('%Y-%m', sale_date) AS month,
+       ROUND(SUM(amount), 0) AS revenue
+FROM sales
+GROUP BY month ORDER BY month LIMIT 12;</div>
+        </div>
+        <div class="res-card">
+          <div class="res-hdr"><span class="res-title">Query Result</span><span class="res-badge" id="res-count">12 rows</span></div>
+          <div class="res-body"><table class="res-table"><thead id="res-head"></thead><tbody id="res-body2"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Table pane -->
+    <div class="cbody" id="pane-dtable" style="display:none;flex-direction:column;gap:8px">
+      <div class="nl-filter-bar">
+        <span class="nl-filter-label">&#127760; NL Filter:</span>
+        <input class="nl-filter-input" id="nl-input" placeholder='e.g. "show only Electronics" or "amount above 50000"'/>
+        <span class="nl-active-filter" id="nl-active-filter"></span>
+        <button class="nl-filter-btn" onclick="applyNLFilter()">Apply</button>
+        <button class="nl-filter-clear" onclick="clearNLFilter()">Clear</button>
+      </div>
+      <div class="dt-wrap" style="flex:1;border-radius:12px">
+        <div class="dt-hdr">
+          <span class="dt-title" id="dt-title">sales</span>
+          <span class="dt-badge" id="dt-badge">500 rows</span>
+          <input class="dt-search" placeholder="Search..." oninput="filterTable(this.value)"/>
+        </div>
+        <div class="dt-body"><table class="dt-table"><thead id="mt-head"></thead><tbody id="mt-body"></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- Forecast pane -->
+    <div class="cbody" id="pane-forecast" style="display:none;flex-direction:column">
+      <div class="forecast-wrap">
+        <div class="forecast-header">
+          <div class="fc-title-row">
+            <span class="fc-title">Revenue Trend Forecast — Next 3 Months</span>
+            <span class="fc-badge">&#9733; AI Forecast · Linear Regression</span>
+          </div>
+          <div class="fc-stats">
+            <div class="fc-stat"><div class="fc-stat-label">Jan 2024 Forecast</div><div class="fc-stat-val">&#8377;1.62L</div><div class="fc-stat-sub up">&#8679; 20% vs Jan 2023</div></div>
+            <div class="fc-stat"><div class="fc-stat-label">Feb 2024 Forecast</div><div class="fc-stat-val">&#8377;1.78L</div><div class="fc-stat-sub up">&#8679; 51% vs Feb 2023</div></div>
+            <div class="fc-stat"><div class="fc-stat-label">Mar 2024 Forecast</div><div class="fc-stat-val">&#8377;1.95L</div><div class="fc-stat-sub up">&#8679; 18% vs Mar 2023</div></div>
+          </div>
+        </div>
+        <div class="forecast-chart">
+          <div class="fc-legend">
+            <div class="fc-leg-item"><div class="fc-leg-dot" style="background:#5B9BD5"></div>Actual Revenue</div>
+            <div class="fc-leg-item"><div class="fc-leg-dot" style="background:#8E44AD;border-top:2px dashed #8E44AD;height:0"></div>Forecast</div>
+            <div class="fc-leg-item"><div class="fc-leg-dot" style="background:#D4537E"></div>Trend Line</div>
+          </div>
+          <div class="fc-chart-area"><canvas id="fc-chart" role="img" aria-label="Forecast chart"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report pane -->
+    <div class="cbody" id="pane-report" style="display:none;flex-direction:column">
+      <div class="report-wrap">
+        <div class="report-toolbar">
+          <span class="report-title">Auto Report Generator</span>
+          <button class="report-btn rb-generate" id="gen-btn" onclick="generateReport()">&#9733; Generate Report</button>
+          <button class="report-btn rb-pdf" id="pdf-btn" onclick="exportPdf()" style="display:none">&#8595; Export PDF</button>
+        </div>
+        <div class="report-content">
+          <div class="report-placeholder" id="report-placeholder">
+            <div class="report-ph-icon">&#128202;</div>
+            <div class="report-ph-text">Click "Generate Report" to create an AI-powered<br>business report from your entire database</div>
+          </div>
+          <div class="report-body" id="report-body">
+            <div class="rpt-h1">Business Performance Report</div>
+            <div class="rpt-date" id="rpt-date"></div>
+            <div class="rpt-divider"></div>
+            <div class="rpt-section">
+              <div class="rpt-h2">Executive Summary</div>
+              <div class="rpt-p">The business delivered strong performance in 2023 with total revenue of ₹17.5L across 500 transactions from 15 active customers. Year-on-year growth stands at 12%, driven primarily by Electronics category which contributed 52% of total revenue.</div>
+              <div class="rpt-highlight">Key Finding: October 2023 was the highest-revenue month at ₹2.15L — 24% above the annual monthly average of ₹1.73L.</div>
+            </div>
+            <div class="rpt-section">
+              <div class="rpt-h2">Revenue Performance</div>
+              <div class="rpt-metric-grid">
+                <div class="rpt-metric"><div class="rpt-metric-label">Total Revenue</div><div class="rpt-metric-val">&#8377;17.5L</div></div>
+                <div class="rpt-metric"><div class="rpt-metric-label">Avg Monthly Revenue</div><div class="rpt-metric-val">&#8377;1.73L</div></div>
+                <div class="rpt-metric"><div class="rpt-metric-label">Peak Month</div><div class="rpt-metric-val">Oct 2023</div></div>
+                <div class="rpt-metric"><div class="rpt-metric-label">YoY Growth</div><div class="rpt-metric-val" style="color:#1D9E75">+12%</div></div>
+              </div>
+            </div>
+            <div class="rpt-section">
+              <div class="rpt-h2">Category Analysis</div>
+              <ul class="rpt-bullets">
+                <li>Electronics leads at ₹8.92L (52% share) — Laptop Pro is the top SKU</li>
+                <li>Furniture at ₹4.45L has the highest avg order value of ₹5,235</li>
+                <li>Education at ₹2.68L shows strongest volume growth — 145 orders</li>
+                <li>Stationery at ₹87K is underperforming — consider bundling strategy</li>
+              </ul>
+            </div>
+            <div class="rpt-section">
+              <div class="rpt-h2">Regional Performance</div>
+              <ul class="rpt-bullets">
+                <li>North region leads at ₹3.85L (22% share) with consistent growth</li>
+                <li>Central region at ₹1.88L is underperforming relative to customer count</li>
+                <li>East and South show recovery momentum in H2 2023</li>
+              </ul>
+            </div>
+            <div class="rpt-section">
+              <div class="rpt-h2">Recommendations</div>
+              <ul class="rpt-bullets">
+                <li>Launch loyalty program for top 5 customers — they represent 28% of revenue</li>
+                <li>Investigate Central region underperformance — pricing or product-mix issue</li>
+                <li>Bundle Stationery with Education products to improve attachment rate</li>
+                <li>Stock up Electronics ahead of Q3 — historically the strongest quarter</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History pane -->
+    <div class="cbody" id="pane-history" style="display:none">
+      <div class="hist-wrap" id="history-list"><div class="hempty">No queries yet</div></div>
+    </div>
+  </div>
+
+  <!-- Chatbar -->
+  <div class="chatbar">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+      <span style="font-size:9px;color:#8E44AD;font-weight:700;text-transform:uppercase;letter-spacing:.06em">&#9733; Smart Suggestions:</span>
+      <div class="sug-chip" id="sug1" onclick="loadSuggestion(this,'Which product category generates the most revenue?')">Which category generates most revenue?</div>
+      <div class="sug-chip" id="sug2" onclick="loadSuggestion(this,'Show top 5 customers by spending as bar chart')">Top 5 customers by spending</div>
+      <div class="sug-chip" id="sug3" onclick="loadSuggestion(this,'Compare quarterly revenue for 2023')">Quarterly comparison</div>
+    </div>
+    <div class="chips">
+      <div class="chip on" onclick="chip(this,'monthly')">Monthly trend</div>
+      <div class="chip" onclick="chip(this,'category')">By category</div>
+      <div class="chip" onclick="chip(this,'region')">By region</div>
+      <div class="chip" onclick="chip(this,'top')">Top customers</div>
+      <div class="chip" onclick="chip(this,'products')">Best products</div>
+      <div class="chip" onclick="chip(this,'quarterly')">Quarterly</div>
+    </div>
+    <div class="irow">
+      <input class="cinput" id="cinput" value="Show monthly sales revenue as a line chart"/>
+      <div class="think" id="think"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span>AI thinking...</span></div>
+      <button class="sbtn" id="sbtn" onclick="runDemo()">Analyse &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+let chart=null,fcChart=null,activeKey='monthly',chartColor='#5B9BD5',history=[],currentTable='sales',tableAllRows=[];
+const COLOURS=[{hex:'#5B9BD5',name:'Ocean Blue'},{hex:'#1D9E75',name:'Emerald'},{hex:'#E67E22',name:'Amber'},{hex:'#8E44AD',name:'Purple'},{hex:'#E74C3C',name:'Crimson'},{hex:'#2C3E50',name:'Midnight'},{hex:'#D4537E',name:'Rose'},{hex:'#27AE60',name:'Forest'},{hex:'#F39C12',name:'Sunflower'},{hex:'#16A085',name:'Teal'}];
+const CMAP={blue:'#5B9BD5',green:'#1D9E75',orange:'#E67E22',purple:'#8E44AD',red:'#E74C3C',teal:'#16A085',pink:'#D4537E',yellow:'#F39C12',emerald:'#1D9E75',crimson:'#E74C3C'};
+const SUGGESTIONS={monthly:['Which month had the highest growth rate?','Show revenue as area chart','How does H1 compare to H2?'],category:['Which category has best profit margin?','Show category trend over time','Compare Electronics vs Furniture'],region:['Which region is growing fastest?','Show region performance as pie chart','Which region has the most orders?'],top:['How much does top customer spend monthly?','Show customer acquisition trend','Which customers are at risk of churning?'],products:['Which product has best revenue per unit?','Show product sales by region','Top products in Electronics only'],quarterly:['Forecast Q1 2024 revenue','Which quarter had best growth?','Compare quarters as area chart']};
+const PROMPTS={monthly:'Show monthly sales revenue as a line chart',category:'Revenue breakdown by product category',region:'Compare sales across all regions',top:'Top 5 customers by total spending',products:'Best selling products by quantity',quarterly:'Quarterly revenue comparison'};
+const D={
+  monthly:{l:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],d:[142000,118000,165000,152000,178000,190000,175000,198000,210000,215000,188000,135000],t:'line',title:'Monthly Sales Revenue — 2023',insight:'Revenue peaked in October at ₹2.15L. Strong Q3 growth driven by Electronics. December dip is seasonal.',sql:'SELECT strftime(\'%Y-%m\', sale_date) AS month,\n       ROUND(SUM(amount), 0) AS revenue\nFROM sales GROUP BY month ORDER BY month LIMIT 12;',rcols:['Month','Revenue (₹)'],rrows:[['2023-01','1,42,000'],['2023-02','1,18,000'],['2023-03','1,65,000'],['2023-04','1,52,000'],['2023-05','1,78,000'],['2023-06','1,90,000'],['2023-07','1,75,000'],['2023-08','1,98,000'],['2023-09','2,10,000'],['2023-10','2,15,000'],['2023-11','1,88,000'],['2023-12','1,35,000']]},
+  category:{l:['Electronics','Furniture','Education','Stationery'],d:[892000,445000,268000,87000],t:'bar',title:'Revenue by Product Category',insight:'Electronics dominates at 52% of total revenue. Furniture has highest per-order value.',sql:'SELECT p.category,\n       ROUND(SUM(s.amount),0) AS revenue\nFROM sales s JOIN products p ON s.product_id=p.id\nGROUP BY p.category ORDER BY revenue DESC;',rcols:['Category','Revenue (₹)'],rrows:[['Electronics','8,92,000'],['Furniture','4,45,000'],['Education','2,68,000'],['Stationery','87,000']]},
+  region:{l:['North','West','East','South','Central'],d:[385000,342000,298000,256000,188000],t:'bar',title:'Sales Revenue by Region',insight:'North leads at ₹3.85L. Central underperforms at 12% share.',sql:'SELECT r.name AS region,\n       ROUND(SUM(s.amount),0) AS revenue\nFROM sales s JOIN regions r ON s.region_id=r.id\nGROUP BY r.name ORDER BY revenue DESC;',rcols:['Region','Revenue (₹)'],rrows:[['North','3,85,000'],['West','3,42,000'],['East','2,98,000'],['South','2,56,000'],['Central','1,88,000']]},
+  top:{l:['Vikram Rao','Rohit Mehta','Priya Nair','Aarav Shah','Karan Patel'],d:[182000,154000,138000,125000,112000],t:'bar',title:'Top 5 Customers by Spending',insight:'Vikram Rao spends 3x the average. Top 5 contribute 28% of revenue.',sql:'SELECT c.name, ROUND(SUM(s.amount),0) AS total_spent\nFROM sales s JOIN customers c ON s.customer_id=c.id\nGROUP BY c.name ORDER BY total_spent DESC LIMIT 5;',rcols:['Customer','Total Spent (₹)'],rrows:[['Vikram Rao','1,82,000'],['Rohit Mehta','1,54,000'],['Priya Nair','1,38,000'],['Aarav Shah','1,25,000'],['Karan Patel','1,12,000']]},
+  products:{l:['Laptop Pro','Monitor 27in','Office Chair','SQL Course','USB Hub'],d:[245,198,120,98,87],t:'bar',title:'Top Products by Units Sold',insight:'Laptop Pro leads in volume. Laptop + Monitor drive 60% of Electronics revenue.',sql:'SELECT p.name, SUM(s.quantity) AS units_sold\nFROM sales s JOIN products p ON s.product_id=p.id\nGROUP BY p.name ORDER BY units_sold DESC LIMIT 5;',rcols:['Product','Units Sold'],rrows:[['Laptop Pro','245'],['Monitor 27in','198'],['Office Chair','120'],['SQL Course','98'],['USB Hub','87']]},
+  quarterly:{l:['Q1 2023','Q2 2023','Q3 2023','Q4 2023'],d:[425000,520000,583000,538000],t:'bar',title:'Quarterly Revenue 2023',insight:'Q3 was the strongest at ₹5.83L. Full-year growth at 18% YoY.',sql:'SELECT \'Q\'||((CAST(strftime(\'%m\',sale_date)AS INT)-1)/3+1)||\' \'||strftime(\'%Y\',sale_date) AS q,\n       ROUND(SUM(amount),0) AS revenue\nFROM sales GROUP BY q ORDER BY q;',rcols:['Quarter','Revenue (₹)'],rrows:[['Q1 2023','4,25,000'],['Q2 2023','5,20,000'],['Q3 2023','5,83,000'],['Q4 2023','5,38,000']]},
+};
+const TABLES={
+  sales:{cols:['ID','Date','Cust ID','Prod ID','Qty','Amount','Reg'],rows:[[1,'2023-03-15',3,1,2,'₹1,70,000',1],[2,'2023-05-22',2,6,1,'₹12,000',4],[3,'2023-07-08',5,10,1,'₹22,000',3],[4,'2023-09-14',1,5,3,'₹9,000',2],[5,'2023-11-30',7,3,1,'₹25,000',5],[6,'2023-02-18',4,2,4,'₹6,000',1],[7,'2023-08-05',6,4,2,'₹1,600',4],[8,'2023-10-21',8,10,1,'₹85,000',3],[9,'2023-04-11',9,8,10,'₹2,500',2],[10,'2023-06-28',10,1,1,'₹85,000',5]]},
+  customers:{cols:['ID','Name','Email','Region','Joined'],rows:[[1,'Aarav Shah','aarav@email.com',1,'2022-03-12'],[2,'Priya Nair','priya@email.com',4,'2022-06-22'],[3,'Rohit Mehta','rohit@email.com',3,'2022-01-05'],[4,'Sneha Joshi','sneha@email.com',1,'2022-09-18'],[5,'Vikram Rao','vikram@email.com',2,'2022-02-28'],[6,'Ananya Iyer','ananya@email.com',4,'2022-11-10']]},
+  products:{cols:['ID','Name','Category','Price (₹)'],rows:[[1,'Laptop Pro','Electronics','85,000'],[2,'Wireless Mouse','Electronics','1,500'],[3,'Office Chair','Furniture','12,000'],[4,'Python Book','Education','800'],[5,'SQL Course','Education','3,000'],[6,'Standing Desk','Furniture','25,000'],[7,'Notebook','Stationery','150'],[8,'Pen Set','Stationery','250'],[9,'Monitor 27in','Electronics','22,000'],[10,'USB Hub','Electronics','2,500']]},
+  regions:{cols:['ID','Name'],rows:[[1,'North'],[2,'South'],[3,'East'],[4,'West'],[5,'Central']]},
+};
+
+function buildColorPicker(){
+  document.getElementById('cd-grid').innerHTML=COLOURS.map((c,i)=>`<div class="cd-swatch${i===0?' sel':''}" style="background:${c.hex}" onclick="setCol('${c.hex}',${i})" title="${c.name}">${i===0?'&#10003;':''}</div>`).join('');
+  document.getElementById('cd-names').innerHTML=COLOURS.map((c,i)=>`<div class="cd-name-row${i===0?' sel':''}" onclick="setCol('${c.hex}',${i})"><div class="cd-dot" style="background:${c.hex}"></div><span class="cd-name">${c.name}</span><span class="cd-check">&#10003;</span></div>`).join('');
+}
+function togglePicker(){
+  document.getElementById('color-dropdown').classList.toggle('show');
+  document.getElementById('color-trigger').classList.toggle('open');
+}
+function setCol(hex,idx){
+  chartColor=hex;
+  document.getElementById('color-preview').style.background=hex;
+  document.querySelectorAll('.cd-swatch').forEach((s,i)=>{s.classList.toggle('sel',i===idx);s.innerHTML=i===idx?'&#10003;':''});
+  document.querySelectorAll('.cd-name-row').forEach((r,i)=>r.classList.toggle('sel',i===idx));
+  document.getElementById('color-dropdown').classList.remove('show');
+  document.getElementById('color-trigger').classList.remove('open');
+  drawChart(activeKey);
+}
+function sTab(t,el){
+  document.querySelectorAll('.stab').forEach(s=>s.classList.remove('on'));el.classList.add('on');
+  document.getElementById('ss').style.display=t==='schema'?'block':'none';
+  document.getElementById('st').style.display=t==='tables'?'block':'none';
+}
+function sClick(el,name){
+  document.querySelectorAll('#ss .trow').forEach(r=>r.classList.remove('on'));el.classList.add('on');
+  document.querySelectorAll('.csec').forEach(c=>c.style.display='none');
+  const cs=document.getElementById('cs-'+name);if(cs)cs.style.display='block';
+}
+function tClick(el,name){
+  document.querySelectorAll('#st .trow').forEach(r=>r.classList.remove('on'));el.classList.add('on');
+  currentTable=name;const t=TABLES[name];if(!t)return;
+  tableAllRows=t.rows;
+  document.getElementById('dt-title').textContent=name;
+  document.getElementById('dt-badge').textContent=t.rows.length+' rows';
+  renderTable(t.rows,t.cols);
+  mTab('dtable',document.querySelectorAll('.ctab')[3]);
+}
+function renderTable(rows,cols){
+  cols=cols||TABLES[currentTable].cols;
+  document.getElementById('mt-head').innerHTML='<tr>'+cols.map(c=>`<th>${c}</th>`).join('')+'</tr>';
+  document.getElementById('mt-body').innerHTML=rows.map(r=>'<tr>'+r.map((cell,i)=>`<td class="${typeof cell==='number'&&i>0?'num':''}">${cell}</td>`).join('')+'</tr>').join('');
+}
+function filterTable(q){
+  if(!q){renderTable(tableAllRows);return;}
+  renderTable(tableAllRows.filter(r=>r.some(c=>String(c).toLowerCase().includes(q.toLowerCase()))));
+}
+const NL_FILTERS={
+  'north':{label:'Region = North',fn:r=>String(r[6]||r[1]||'').includes('North')||r[6]===1},
+  'electronics':{label:'Category = Electronics',fn:r=>String(r[3]||r[2]||'').toLowerCase().includes('electron')},
+  'above 50000':{label:'Amount > ₹50,000',fn:r=>String(r[5]||'').replace(/[₹,]/g,'').replace(/k/,000)>50000},
+  'furniture':{label:'Category = Furniture',fn:r=>String(r[3]||r[2]||'').toLowerCase().includes('furniture')},
+};
+function applyNLFilter(){
+  const q=document.getElementById('nl-input').value.toLowerCase().trim();
+  if(!q)return;
+  let label='Custom filter applied';
+  let filtered=tableAllRows;
+  for(const[key,f] of Object.entries(NL_FILTERS)){
+    if(q.includes(key)){filtered=tableAllRows.filter(f.fn);label=f.label;break;}
+  }
+  if(filtered.length===tableAllRows.length) filtered=tableAllRows.slice(0,3);
+  renderTable(filtered);
+  document.getElementById('dt-badge').textContent=filtered.length+' rows (filtered)';
+  const af=document.getElementById('nl-active-filter');
+  af.textContent='Filter: '+label;af.classList.add('show');
+}
+function clearNLFilter(){
+  document.getElementById('nl-input').value='';
+  document.getElementById('nl-active-filter').classList.remove('show');
+  renderTable(tableAllRows);
+  document.getElementById('dt-badge').textContent=tableAllRows.length+' rows';
+}
+function mTab(t,el){
+  document.querySelectorAll('.ctab').forEach(c=>c.classList.remove('on'));if(el)el.classList.add('on');
+  ['chart','insight','sql','dtable','forecast','report','history'].forEach(p=>{const pe=document.getElementById('pane-'+p);if(pe)pe.style.display='none';});
+  const pane=document.getElementById('pane-'+t);
+  if(pane){pane.style.display='flex';if(['sql','dtable','forecast','report'].includes(t))pane.style.flexDirection='column';}
+  if(t==='forecast')drawForecast();
+  if(t==='history')buildHistory();
+}
+function updateSuggestions(key){
+  const sugs=SUGGESTIONS[key]||SUGGESTIONS.monthly;
+  ['sug1','sug2','sug3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el&&sugs[i]){el.textContent=sugs[i];el.onclick=()=>loadSuggestion(el,sugs[i]);}
+  });
+}
+function loadSuggestion(el,text){
+  document.getElementById('cinput').value=text;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+}
+function buildHistory(){
+  const el=document.getElementById('history-list');
+  if(!history.length){el.innerHTML='<div class="hempty">No queries yet</div>';return;}
+  el.innerHTML=history.slice().reverse().map((h,i)=>`<div class="hcard"><div class="hprompt">${h.prompt}</div><div class="hmeta"><span class="htag">${h.type} chart</span><span class="htime">${h.time}</span></div></div>`).join('');
+}
+function chip(el,key){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');
+  activeKey=key;document.getElementById('cinput').value=PROMPTS[key];
+}
+function drawChart(key){
+  const d=D[key];if(!d)return;
+  if(chart){chart.destroy();chart=null;}
+  const ctx=document.getElementById('mc').getContext('2d');
+  chart=new Chart(ctx,{type:d.t,data:{labels:d.l,datasets:[{label:'Value',data:d.d,backgroundColor:d.t==='line'?'transparent':chartColor+'CC',borderColor:chartColor,borderWidth:d.t==='line'?2.5:0,fill:false,tension:.4,pointRadius:d.t==='line'?4:0,pointBackgroundColor:chartColor,borderRadius:d.t==='bar'?5:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' ₹'+Math.round(c.parsed.y).toLocaleString('en-IN')}}},scales:{x:{grid:{color:'rgba(0,0,0,.06)'},ticks:{color:'#374151',font:{size:11,weight:'600'},maxRotation:30}},y:{grid:{color:'rgba(0,0,0,.06)'},ticks:{color:'#374151',font:{size:11,weight:'600'},callback:v=>'₹'+(v>=100000?(v/100000).toFixed(1)+'L':(v/1000).toFixed(0)+'k')}}}}});
+  document.getElementById('ch-title').textContent=d.title;
+  document.getElementById('ch-badge').textContent=d.t+' · '+d.l.length+' pts';
+  document.getElementById('insight-text').textContent=d.insight;
+  document.getElementById('prompt-used').textContent=PROMPTS[key]||'';
+  document.getElementById('sql-text').textContent=d.sql;
+  document.getElementById('res-count').textContent=d.rrows.length+' rows';
+  document.getElementById('res-head').innerHTML='<tr>'+d.rcols.map(c=>`<th>${c}</th>`).join('')+'</tr>';
+  document.getElementById('res-body2').innerHTML=d.rrows.map(r=>'<tr>'+r.map((cell,i)=>`<td class="${i>0?'num':''}">${cell}</td>`).join('')+'</tr>').join('');
+  updateSuggestions(key);
+}
+function drawForecast(){
+  if(fcChart){fcChart.destroy();fcChart=null;}
+  const ctx=document.getElementById('fc-chart').getContext('2d');
+  const actual=[142000,118000,165000,152000,178000,190000,175000,198000,210000,215000,188000,135000];
+  const forecast=[null,null,null,null,null,null,null,null,null,null,null,135000,162000,178000,195000];
+  const trend=actual.map((_,i)=>Math.round(130000+i*7500));
+  const labels=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan 24','Feb 24','Mar 24'];
+  fcChart=new Chart(ctx,{type:'line',data:{labels,datasets:[
+    {label:'Actual',data:[...actual,null,null,null],borderColor:'#5B9BD5',borderWidth:2.5,pointRadius:4,pointBackgroundColor:'#5B9BD5',fill:false,tension:.4},
+    {label:'Forecast',data:forecast,borderColor:'#8E44AD',borderWidth:2.5,borderDash:[6,4],pointRadius:4,pointBackgroundColor:'#8E44AD',fill:false,tension:.3},
+    {label:'Trend',data:[...trend,Math.round(130000+12*7500),Math.round(130000+13*7500),Math.round(130000+14*7500)],borderColor:'#D4537E',borderWidth:1.5,borderDash:[3,3],pointRadius:0,fill:false,tension:.4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.dataset.label+': ₹'+(c.parsed.y/100000).toFixed(2)+'L'}}},scales:{x:{grid:{color:'rgba(0,0,0,.06)'},ticks:{color:'#374151',font:{size:10,weight:'600'}}},y:{grid:{color:'rgba(0,0,0,.06)'},ticks:{color:'#374151',font:{size:10,weight:'600'},callback:v=>'₹'+(v/100000).toFixed(1)+'L'}}}}});
+}
+function generateReport(){
+  const btn=document.getElementById('gen-btn');
+  btn.className='report-btn rb-loading';btn.textContent='Generating...';btn.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('report-placeholder').style.display='none';
+    document.getElementById('report-body').classList.add('show');
+    document.getElementById('rpt-date').textContent='Generated: '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'});
+    btn.className='report-btn rb-generate';btn.textContent='&#9733; Regenerate';btn.disabled=false;btn.innerHTML='&#9733; Regenerate';
+    document.getElementById('pdf-btn').style.display='flex';
+  },2000);
+}
+function exportPdf(){alert('In the real app this downloads the report as a formatted PDF file.');}
+function exportChart(){const a=document.createElement('a');a.download='chart.png';a.href=document.getElementById('mc').toDataURL('image/png');a.click();}
+function copySql(){navigator.clipboard.writeText(document.getElementById('sql-text').textContent).catch(()=>{});}
+function runDemo(){
+  const btn=document.getElementById('sbtn'),th=document.getElementById('think');
+  btn.disabled=true;th.classList.add('on');
+  const now=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  setTimeout(()=>{
+    th.classList.remove('on');btn.disabled=false;
+    drawChart(activeKey);
+    history.push({prompt:PROMPTS[activeKey]||document.getElementById('cinput').value,type:D[activeKey].t,time:now});
+    mTab('chart',document.querySelectorAll('.ctab')[0]);
+  },1600);
+}
+
+buildColorPicker();
+renderTable(TABLES.sales.rows,TABLES.sales.cols);
+drawChart('monthly');
+</script>
